@@ -2,36 +2,11 @@ import StudentModel from "../models/students.model";
 import TeacherModel from "../models/teachers.model";
 import { ISignUp } from "../schema/auth.schema";
 
-function createUser({
-  username,
-  displayName,
-  password,
-  topics,
-  email,
-  accountType,
-  profileImageUrl,
-  websiteLink,
-}: ISignUp) {
-  if (accountType === "teacher") {
-    return TeacherModel.create({
-      username: username,
-      displayName: displayName,
-      password: password,
-      topics: topics,
-      email: email,
-      accountType: accountType,
-      profileImageUrl: profileImageUrl,
-      websiteLink: websiteLink,
-    });
+function createUser(body: ISignUp) {
+  if (body.accountType === "teacher") {
+    return TeacherModel.create(body);
   }
 
-  return StudentModel.create({
-    username: username,
-    accountType: accountType,
-    password: password,
-    displayName: displayName,
-    topics: topics,
-    email: email,
-  });
+  return StudentModel.create(body);
 }
 export { createUser };

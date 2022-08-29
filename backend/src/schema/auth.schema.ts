@@ -9,30 +9,23 @@ export interface ISignUp {
   websiteLink?: string;
 }
 
-export function SignUpUserInput({
-  username,
-  displayName,
-  password,
-  topics,
-  email,
-  accountType,
-}: ISignUp): boolean | string {
+export function SignUpUserInput(body: ISignUp): boolean | string {
   if (
-    !username ||
-    !displayName ||
-    !password ||
-    !topics ||
-    !email ||
-    !Array.isArray(topics) ||
-    !accountType
+    !body.username ||
+    !body.displayName ||
+    !body.password ||
+    !body.topics ||
+    !body.email ||
+    !Array.isArray(body.topics) ||
+    !body.accountType
   ) {
     return "Enter Required Fieldws";
   }
-  if (password.length < 6) {
+  if (body.password.length < 6) {
     return "password too short, Must me more than six characters";
   }
 
-  if (accountType === "teacher" || accountType === "student") {
+  if (body.accountType === "teacher" || body.accountType === "student") {
     return false;
   } else {
     return "Invalid Account Type";

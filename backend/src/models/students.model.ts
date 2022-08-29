@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
+import { generateCode } from "../utils/generate";
 interface IStudent {
   username: string;
   displayName: string;
@@ -10,10 +11,13 @@ interface IStudent {
   teachers: string[];
   bookmarks: string[];
   profileImageUrl?: string;
+  verifcationCode: number;
+  passowrdResetCode: string;
+  verified: boolean;
 }
 
 const studentSchema = new Schema({
-  username: { type: String, required: true, unique:true },
+  username: { type: String, required: true, unique: true },
   displayName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -22,6 +26,9 @@ const studentSchema = new Schema({
   accountType: { enum: ["teacher", "student"] },
   bookmarks: { type: [String], default: [] },
   profileImageUrl: String,
+  verificationCode: { type: String, default: () => generateCode() },
+  passowrdResetCode: {type: String, default: ""},
+  verified: { type: Boolean, default: false },
 });
 
 studentSchema.pre("save", async function () {
