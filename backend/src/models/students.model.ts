@@ -1,7 +1,7 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 import bcrypt from "bcrypt";
 import { generateCode } from "../utils/generate";
-interface IStudent {
+export interface IStudent {
   username: string;
   displayName: string;
   email: string;
@@ -11,9 +11,10 @@ interface IStudent {
   teachers: string[];
   bookmarks: string[];
   profileImageUrl?: string;
-  verifcationCode: number;
+  verificationCode: string;
   passowrdResetCode: string;
   verified: boolean;
+  _id: ObjectId;
 }
 
 const studentSchema = new Schema({
@@ -23,15 +24,16 @@ const studentSchema = new Schema({
   password: { type: String, required: true },
   topics: [String],
   teachers: { type: [String], default: [] },
-  accountType: { enum: ["teacher", "student"] },
+  accountType: { type: String, enum: ["teacher", "student"] },
   bookmarks: { type: [String], default: [] },
   profileImageUrl: String,
   verificationCode: { type: String, default: () => generateCode() },
-  passowrdResetCode: {type: String, default: ""},
+  passowrdResetCode: { type: String, default: "" },
   verified: { type: Boolean, default: false },
 });
 
 studentSchema.pre("save", async function () {
+  console.log(this.password)
   const hash = await bcrypt.hash(this.password, 14);
   this.password = hash;
 });

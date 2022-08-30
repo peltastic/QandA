@@ -1,8 +1,8 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 import bcrypt from "bcrypt";
 import { generateCode } from "../utils/generate";
 
-interface ITeacher {
+export interface ITeacher {
   username: string;
   displayName: string;
   email: string;
@@ -15,9 +15,10 @@ interface ITeacher {
   bookmarks: string[];
   profileImageUrl?: string;
   websiteLink?: string;
-  verifcationCode: number;
+  verificationCode: string;
   passowrdResetCode: string;
   verified: boolean;
+  _id: ObjectId;
 }
 
 const teacherSchema = new Schema({
@@ -26,7 +27,7 @@ const teacherSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   topics: [String],
-  accountType: { enum: ["teacher", "student"] },
+  accountType: { type: String, enum: ["teacher", "student"] },
   upvotes: { type: Number, default: 0 },
   studentsCount: { type: Number, default: 0 },
   students: { type: [String], default: [] },
@@ -34,7 +35,7 @@ const teacherSchema = new Schema({
   profileImageUrl: String,
   websiteLink: String,
   verificationCode: { type: String, default: () => generateCode() },
-  passowrdResetCode: {type: String, default: ""},
+  passowrdResetCode: { type: String, default: "" },
   verified: { type: Boolean, default: false },
 });
 
